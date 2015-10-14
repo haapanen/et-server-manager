@@ -160,7 +160,7 @@ func (s *Server) StartServerProcess() (*exec.Cmd, error) {
 	parameters = append(parameters, fmt.Sprintf("+map oasis"))
 
 	for _, config := range s.Configs {
-		parameters = append(parameters, fmt.Sprintf("exec \"%s\"", config))
+		parameters = append(parameters, fmt.Sprintf("+exec %s", config))
 	}
 
 	serverProcess := exec.Command(globalConfiguration.ScreenPath, parameters...)
