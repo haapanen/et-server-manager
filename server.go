@@ -152,16 +152,16 @@ func (s *Server) StartServerProcess() (*exec.Cmd, error) {
 		fmt.Sprintf("+set fs_game \"%s\"", s.Mod),
 	}
 
-	for _, config := range s.Configs {
-		parameters = append(parameters, fmt.Sprintf("exec \"%s\"", config))
-	}
-
 	parameters = append(parameters, fmt.Sprintf("+set com_hunkmegs \"128\""))
 	parameters = append(parameters, fmt.Sprintf("+set fs_basepath \"%s\"", s.BasePath))
 	parameters = append(parameters, fmt.Sprintf("+set fs_homepath \"%s\"", s.HomePath))
 	parameters = append(parameters, fmt.Sprintf("+set net_ip \"%s\"", s.Ip))
 	parameters = append(parameters, fmt.Sprintf("+set net_port \"%d\"", s.Port))
 	parameters = append(parameters, fmt.Sprintf("+map oasis"))
+
+	for _, config := range s.Configs {
+		parameters = append(parameters, fmt.Sprintf("exec \"%s\"", config))
+	}
 
 	serverProcess := exec.Command(globalConfiguration.ScreenPath, parameters...)
 	serverProcess.Dir = filepath.Dir(globalConfiguration.ExecutablePath)
