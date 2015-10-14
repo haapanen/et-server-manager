@@ -32,7 +32,7 @@ func StripColors(text string) (string) {
 //
 // A status response from an ET server
 type StatusResponse struct {
-	Keys map[string]string
+	Keys    map[string]string
 	Players []string
 }
 

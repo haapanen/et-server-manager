@@ -16,16 +16,16 @@ import (
 )
 
 type Server struct {
-	Name string `json:"name"`
-	Ip string `json:"ip"`
-	Port int `json:"port"`
-	Mod string `json:"mod"`
+	Name     string `json:"name"`
+	Ip       string `json:"ip"`
+	Port     int `json:"port"`
+	Mod      string `json:"mod"`
 	BasePath string `json:"basePath"`
 	HomePath string `json:"homePath"`
-	Configs []string `json:"configs"`
-	User string `json:"user"`
-	Running bool `json:"running"`
-	Pid int `json:"pid"`
+	Configs  []string `json:"configs"`
+	User     string `json:"user"`
+	Running  bool `json:"running"`
+	Pid      int `json:"pid"`
 }
 
 //
@@ -266,7 +266,7 @@ func (s *Server) SecurityCheck() (bool, error) {
 // Checks if the basepath contains necessary files to host an ET server
 // pak0.pk3, pak1.pk3, pak2.pk3 and mp_bin.pk3
 func (s *Server) basePathContainsNecessaryFiles() (bool, error) {
-	fileInfos, err := ioutil.ReadDir(s.BasePath + "etmain/")
+	fileInfos, err := ioutil.ReadDir(filepath.Join(s.BasePath, "etmain"))
 	if err != nil {
 		return false, errors.New(fmt.Sprintf("Basepath check failed: %s", err))
 	}

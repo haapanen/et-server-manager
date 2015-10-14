@@ -1,3 +1,6 @@
+//
+// Handles configuration loading and saving
+
 package main
 import (
 	"os"
@@ -7,12 +10,12 @@ import (
 )
 
 type Configuration struct {
-	Servers []Server `json:"servers"`
+	Servers        []Server `json:"servers"`
 	ExecutablePath string `json:"executablePath"`
-	ScreenPath string `json:"screenPath"`
-	PgrepPath string `json:"pgrepPath"`
-	KillPath string `json:"killPath"`
-	SuPath string `json:"suPath"`
+	ScreenPath     string `json:"screenPath"`
+	PgrepPath      string `json:"pgrepPath"`
+	KillPath       string `json:"killPath"`
+	SuPath         string `json:"suPath"`
 }
 
 //
@@ -61,8 +64,8 @@ func AddServer(config *Configuration) {
 	server.Ip = "127.0.0.1"
 	server.Port = 27960
 	server.Mod = "etjump"
-	server.BasePath = "/home/server/et/"
-	server.HomePath = "/home/server/et/"
+	server.BasePath = "/home/server/et"
+	server.HomePath = "/home/server/et"
 	server.Configs = []string{"server.cfg"}
 	server.User = "root"
 	server.Running = false

@@ -4,6 +4,7 @@ import (
 	"os"
 	"time"
 	"errors"
+	"log"
 )
 
 var globalConfiguration *Configuration
@@ -45,9 +46,15 @@ func main() {
 		}
 		switch os.Args[1] {
 		case "start":
-			server.Start()
+			err = server.Start()
+			if err != nil {
+				fmt.Println(err)
+			}
 		case "stop":
-			server.Stop()
+			err = server.Stop()
+			if err != nil {
+				fmt.Println(err)
+			}
 		case "restart":
 			server.Restart()
 		case "status":
@@ -67,13 +74,13 @@ func loop() {
 
 	config, err := ReadConfig(configFile)
 	if err != nil {
-		fmt.Printf("Could not read config.json: %s\n", err)
+		log.Printf("Could not read config.json: %s\n", err)
 		return
 	}
 
 	fileInfo, err := os.Stat(configFile)
 	if err != nil {
-		fmt.Printf("Could not check previous modification time of config.json: %s\n", err)
+		log.Printf("Could not check previous modification time of config.json: %s\n", err)
 		return
 	}
 
@@ -85,7 +92,7 @@ func loop() {
 		if fileInfo.ModTime() != prevModTime {
 			config, err = ReadConfig(configFile)
 			if err != nil {
-				fmt.Printf("Could not read config.json while looping: %s\n", err)
+				log.Printf("Could not read config.json while looping: %s\n", err)
 				continue
 			}
 		}
@@ -93,7 +100,7 @@ func loop() {
 		for idx, _ := range config.Servers {
 			if config.Servers[idx].Running {
 				if !config.Servers[idx].CheckServer() {
-					fmt.Printf("Server \"%s\" should be running but is not. Restarting.\n", config.Servers[idx].Name)
+					log.Printf("Server \"%s\" should be running but is not. Restarting.\n", config.Servers[idx].Name)
 					config.Servers[idx].StartServerProcess()
 					SaveConfig(configFile, config)
 				}
