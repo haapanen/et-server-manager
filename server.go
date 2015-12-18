@@ -27,6 +27,7 @@ type Server struct {
 	Running  bool `json:"running"`
 	Pid      int `json:"pid"`
 	Env 	 []string `json:env`
+	CustomExecutablePath string `json:customExecutablePath`
 }
 
 // GetStatus
@@ -146,10 +147,17 @@ func (s *Server) StartServerProcess() (*exec.Cmd, error) {
 		return &exec.Cmd{}, err
 	}
 
+	var executablePath string
+	if len(s.CustomExecutablePath) > 0 {
+		executablePath = s.CustomExecutablePath
+	} else {
+		executablePath = globalConfiguration.ExecutablePath
+	}
+
 	parameters := []string{
 		"-dmS",
 		s.Name + strconv.Itoa(s.Port),
-		globalConfiguration.ExecutablePath,
+		executablePath,
 		fmt.Sprintf("+set fs_game \"%s\"", s.Mod),
 	}
 
