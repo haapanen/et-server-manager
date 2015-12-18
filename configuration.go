@@ -18,7 +18,7 @@ type Configuration struct {
 	SuPath         string `json:"suPath"`
 }
 
-//
+// ReadConfig
 // Reads a configuration from fileName and returns it
 func ReadConfig(fileName string) (config *Configuration, err error) {
 	file, err := os.Open(fileName)
@@ -44,7 +44,7 @@ func ReadConfig(fileName string) (config *Configuration, err error) {
 	return config, nil
 }
 
-//
+// SaveConfig
 // Saves the config to a file
 func SaveConfig(fileName string, config *Configuration) (error) {
 	bytes, err := json.MarshalIndent(config, "", "    ")
@@ -55,7 +55,7 @@ func SaveConfig(fileName string, config *Configuration) (error) {
 	return err
 }
 
-//
+// AddServer
 // Adds a default server to the configuration
 func AddServer(config *Configuration) {
 	server := Server{}

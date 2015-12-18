@@ -26,9 +26,10 @@ type Server struct {
 	User     string `json:"user"`
 	Running  bool `json:"running"`
 	Pid      int `json:"pid"`
+	Env 	 []string `json:env`
 }
 
-//
+// GetStatus
 // Returns the status response of the server in a parsed format
 func (s *Server) GetStatus() (*StatusResponse, error) {
 	conn, err := net.DialTimeout("udp", fmt.Sprintf("%s:%d", s.Ip, s.Port), 1000 * time.Millisecond)
@@ -54,7 +55,7 @@ func (s *Server) GetStatus() (*StatusResponse, error) {
 	return sr, nil
 }
 
-//
+// PrintStatus
 // Prints the server status
 func (s *Server) PrintStatus(verbose bool) {
 	if !s.Running {
@@ -96,7 +97,7 @@ func (s *Server) PrintStatus(verbose bool) {
 	}
 }
 
-//
+// Start
 // Checks if the server is running and starts the server process if not
 // Informs the user of the current server status
 func (s *Server) Start() (error) {
@@ -137,7 +138,7 @@ func (s *Server) Start() (error) {
 	return nil
 }
 
-//
+// StartServerProcess
 // Starts the server process if it's not already running
 func (s *Server) StartServerProcess() (*exec.Cmd, error) {
 	user, err := user.Lookup(s.User)
@@ -167,6 +168,9 @@ func (s *Server) StartServerProcess() (*exec.Cmd, error) {
 	serverProcess.Dir = filepath.Dir(globalConfiguration.ExecutablePath)
 	// Needed for ET Process, saves .etwolf folder here
 	serverProcess.Env = []string{fmt.Sprintf("HOME=%s", user.HomeDir)}
+	for _, envVar := range s.Env {
+		serverProcess.Env = append(serverProcess.Env, envVar)
+	}
 
 	uid, err := strconv.Atoi(user.Uid)
 	if err != nil {
@@ -189,7 +193,7 @@ func (s *Server) StartServerProcess() (*exec.Cmd, error) {
 
 }
 
-//
+// Stop
 // Stops the server if it's running
 func (s *Server) Stop() (err error) {
 	err = nil
@@ -212,7 +216,7 @@ func (s *Server) Stop() (err error) {
 	return err
 }
 
-//
+// Restart
 // Restarts the server
 func (s *Server) Restart() {
 	s.Stop()
@@ -228,7 +232,7 @@ func (s *Server) Restart() {
 	s.Start()
 }
 
-//
+// CheckServer
 // Checks that the server is still running
 func (s *Server) CheckServer() (bool) {
 	if s.Running {
@@ -242,7 +246,7 @@ func (s *Server) CheckServer() (bool) {
 	return true
 }
 
-//
+// SecurityCheck
 // Checks that the calling user is allowed to execute the script
 func (s *Server) SecurityCheck() (bool, error) {
 	owner, err := user.Lookup(s.User)
