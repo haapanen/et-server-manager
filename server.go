@@ -149,14 +149,9 @@ func (s *Server) StartServerProcess() (*exec.Cmd, error) {
 	parameters := []string{
 		"-dmS",
 		s.Name + strconv.Itoa(s.Port),
+		globalConfiguration.ExecutablePath,
+		fmt.Sprintf("+set fs_game \"%s\"", s.Mod),
 	}
-
-	for _, envVar := range s.Env {
-		parameters = append(parameters, envVar)
-	}
-
-	parameters = append(parameters, globalConfiguration.ExecutablePath)
-	parameters = append(parameters, fmt.Sprintf("+set fs_game \"%s\"", s.Mod))
 
 	parameters = append(parameters, fmt.Sprintf("+set com_hunkmegs \"128\""))
 	parameters = append(parameters, fmt.Sprintf("+set fs_basepath \"%s\"", s.BasePath))
@@ -173,6 +168,9 @@ func (s *Server) StartServerProcess() (*exec.Cmd, error) {
 	serverProcess.Dir = filepath.Dir(globalConfiguration.ExecutablePath)
 	// Needed for ET Process, saves .etwolf folder here
 	serverProcess.Env = []string{fmt.Sprintf("HOME=%s", user.HomeDir)}
+	for _, envVar := range s.Env {
+		serverProcess.Env = append(serverProcess.Env, envVar)
+	}
 
 	uid, err := strconv.Atoi(user.Uid)
 	if err != nil {
